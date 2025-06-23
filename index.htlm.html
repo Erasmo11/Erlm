@@ -1,0 +1,127 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Llueve Amor</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Patrick+Hand&display=swap');
+
+    body {
+      margin: 0;
+      background: black;
+      overflow: hidden;
+      cursor: pointer;
+    }
+
+    canvas {
+      display: block;
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 1;
+    }
+
+    .overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 2;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      pointer-events: none;
+      font-family: 'Courier New', monospace;
+    }
+
+    .center-message {
+      font-family: 'Courier New', monospace;
+      color: #ff69b4;
+      font-size: 3rem;
+      text-align: center;
+      opacity: 0.9;
+    }
+
+    .click-word {
+      position: absolute;
+      font-size: 24px;
+      color: #ff69b4;
+      animation: floatUp 1.5s ease-out forwards;
+      pointer-events: none;
+      font-family: 'Patrick Hand', cursive;
+    }
+
+    @keyframes floatUp {
+      0% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+      100% { transform: translate(-50%, -150%) scale(2); opacity: 0; }
+    }
+  </style>
+</head>
+<body>
+
+  <canvas id="canvas"></canvas>
+
+  <div class="overlay">
+    <div class="center-message">TE AMO MI ALI ❤️</div>
+  </div>
+
+  <script>
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    const text = "TE AMO MI ALI ❤️";
+    const fontSize = 16;
+    const columns = Math.floor(canvas.width / (fontSize * 4));
+    const drops = new Array(columns).fill(1);
+
+    ctx.font = fontSize + "px monospace";
+
+    function draw() {
+      ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      ctx.fillStyle = "#ff69b4";
+      for (let i = 0; i < drops.length; i++) {
+        const x = i * fontSize * 4;
+        const y = drops[i] * fontSize;
+        ctx.fillText(text, x, y);
+
+        if (y > canvas.height && Math.random() > 0.975) {
+          drops[i] = 0;
+        }
+
+        drops[i]++;
+      }
+    }
+
+    setInterval(draw, 50);
+
+    window.addEventListener('resize', () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    });
+
+    // Efecto de palabras al hacer clic
+    const words = ["Hermosa", "Perfecta", "Ojitos preciosos", "Mi vida", "Preciosa", "Increíble"];
+    document.addEventListener('click', (e) => {
+      const word = document.createElement('div');
+      word.className = 'click-word';
+      word.style.left = e.clientX + 'px';
+      word.style.top = e.clientY + 'px';
+      word.innerHTML = words[Math.floor(Math.random() * words.length)];
+      document.body.appendChild(word);
+
+      setTimeout(() => {
+        word.remove();
+      }, 1500);
+    });
+  </script>
+
+</body>
+</html>
